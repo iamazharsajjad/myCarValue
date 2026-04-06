@@ -9,17 +9,15 @@ import{
 import { map } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { plainToClass } from "class-transformer";
-
+import { UserDTO } from "../users/dtos/user.dto";
+ 
 export class SerializeInterceptor implements NestInterceptor {
     intercept(context: ExecutionContext, handler: CallHandler<any>): Observable<any> {
-        // run something before a request is handled
-        console.log('Before...');
         return handler.handle().pipe(
             map((data: any) => {
-                // run something before the response is sent out
-                console.log('After...');
-                //return data;
-
+                return plainToClass(UserDTO, data, { 
+                    excludeExtraneousValues: true,
+                });
             })
         );
     }
